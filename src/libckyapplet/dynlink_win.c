@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * ***** END COPYRIGHT BLOCK ***** */
 
-#include <Windows.h>
+#include <windows.h>
 #include "cky_base.h"
 #include "dynlink.h"
 
