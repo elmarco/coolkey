@@ -68,3 +68,5 @@ if !IS_WINDOWS
 pcdir = $(libdir)/pkgconfig
 pc_DATA = libckyapplet.pc
 endif
+
+-include $(top_srcdir)/git.mk

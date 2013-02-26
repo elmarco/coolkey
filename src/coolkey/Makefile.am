@@ -79,3 +79,5 @@ if IS_WINDOWS
 endif
 
 
+
+-include $(top_srcdir)/git.mk
