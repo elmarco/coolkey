@@ -19,7 +19,7 @@
 
 # Process this file with automake to create Makefile.in
 
-INCLUDES=$(NSS_CFLAGS)
+AM_CPPFLAGS=$(NSS_CFLAGS)
 
 bin_PROGRAMS=pk11install
 

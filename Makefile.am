@@ -19,6 +19,11 @@
 
 # Process this file with automake to create Makefile.in.
 
+makeflags_ = $(makeflags_$(AM_DEFAULT_VERBOSITY))
+makeflags_0 = --no-print-directory -s
+makeflags_1 =
+AM_MAKEFLAGS = $(makeflags_$(V))
+
 SUBDIRS = src/libckyapplet src/coolkey 
 
 if BUILD_PK11INSTALL
@@ -28,9 +33,5 @@ endif
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = coolkey.spec LICENSE
-
-DISTCLEANFILES = 
-
-AUTOMAKE_OPTIONS = foreign
 
 

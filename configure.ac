@@ -1,7 +1,7 @@
 # $Id$
 #
 # BEGIN COPYRIGHT BLOCK
-# Copyright (C) 2005 Red Hat, Inc.
+# Copyright (C) 2005-2013 Red Hat, Inc.
 # All rights reserved.
 #
 # This library is free software; you can redistribute it and/or
@@ -18,22 +18,22 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # END COPYRIGHT BLOCK
-
-# Require autoconf 2.52
-AC_PREREQ(2.52)
+AC_PREREQ([2.69])
 
 # Process this file with autoconf to produce a configure script.
-AC_INIT(coolkey,[1.2.0])
+AC_INIT([coolkey],[1.2.0])
 AC_CONFIG_SRCDIR([src/coolkey/coolkey.cpp])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE()
+AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar foreign -Wall])
 AC_CONFIG_HEADERS([config.h])
 
-AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE([enable])
+AM_SILENT_RULES([yes])
 
 # Add argument for debuging
-AC_ARG_ENABLE(debug, 
-  AC_HELP_STRING([--enable-debug],[add debugging code (default=yes)]))
+AC_ARG_ENABLE(debug,
+  AS_HELP_STRING([--enable-debug],[add debugging code (default=yes)]))
 if test "$enable_debug" = "no" -o "$enable_debug" = "false"
 then
   AC_MSG_WARN([Debugging support is completely disabled!])
@@ -52,51 +52,52 @@ UNIX=0
 AC_MSG_CHECKING([platform type: ])
 case "$host" in
 *-*-win*|*-*-cygwin*)
-  	AC_MSG_RESULT([Windows])
-	WINDOWS=1
-	ZLIB_CFLAGS=-I${ZLIB_INCLUDE}
-	ZLIB_LIBS=${ZLIB_LIB}/zdll.dll
-	#OS_FLAGS=`echo $INCLUDE | tr '[[:upper:]]' '[[:lower:]]' | sed -e 's;\\\\;/;g' -e 's;.:;/cygdrive/&/;g' -e 's;:;;g' -e 's;//;/;g' -e 's/;/\" -I\"/g' -e 's;^;-I\";' -e 's;$;\";'`
-	CPPFLAGS="$CPPFLAGS $OS_FLAGS -DWIN32"
-	LDFLAGS="$LDFLAGS"
-	AC_MSG_WARN([changing CPPFLAGS = $CPPFLAGS ] );
-	SCARD_LIB_NAME="winscard.dll"
-	# override config defaults for windows
-	CC=cl
-	CXX=cl 
-	CXXFLAGS="$CXXFLAGS /EHsc"
-	#
-	# Sigh, prevents us from overriding it with --libdir= in the config 
-	* line, but we can still override it in the make line.
-	#
-	libdir=`cygpath ${WINDIR}/system32`
-	;;
+        AC_MSG_RESULT([Windows])
+        WINDOWS=1
+        ZLIB_CFLAGS=-I${ZLIB_INCLUDE}
+        ZLIB_LIBS=${ZLIB_LIB}/zdll.dll
+        #OS_FLAGS=`echo $INCLUDE | tr '[[:upper:]]' '[[:lower:]]' | sed -e 's;\\\\;/;g' -e 's;.:;/cygdrive/&/;g' -e 's;:;;g' -e 's;//;/;g' -e 's/;/\" -I\"/g' -e 's;^;-I\";' -e 's;$;\";'`
+        CPPFLAGS="$CPPFLAGS $OS_FLAGS -DWIN32"
+        LDFLAGS="$LDFLAGS"
+        AC_MSG_WARN([changing CPPFLAGS = $CPPFLAGS ] );
+        SCARD_LIB_NAME="winscard.dll"
+        # override config defaults for windows
+        CC=cl
+        CXX=cl
+        CXXFLAGS="$CXXFLAGS /EHsc"
+        #
+        # Sigh, prevents us from overriding it with --libdir= in the config
+        * line, but we can still override it in the make line.
+        #
+        libdir=`cygpath ${WINDIR}/system32`
+        ;;
 *-*-darwin*)
-  	AC_MSG_RESULT([MAC])
-	MAC=1 
-	SCARD_LIB_NAME="PCSC.Framework/PCSC"
-	PCSC_MSG=yes
-	PCSC_CFLAGS="-I/System/Library/Frameworks/PCSC.framework/Versions/Current/Headers"
-	PCSC_LIBS="-Wl,-framework,PCSC"
-	CFLAGS="-DMAC  -I/System/Library/Frameworks/Security.framework/Versions/Current/Headers -isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386"
-	LDFLAGS="-L/System/Library/Frameworks/Security.framework/Versions/Current/Security -arch ppc -arch i386"
-	CXXFLAGS="-DMAC  -I/System/Library/Frameworks/Security.framework/Versions/Current/Headers -isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386"
-	;;
+        AC_MSG_RESULT([MAC])
+        MAC=1
+        SCARD_LIB_NAME="PCSC.Framework/PCSC"
+        PCSC_MSG=yes
+        PCSC_CFLAGS="-I/System/Library/Frameworks/PCSC.framework/Versions/Current/Headers"
+        PCSC_LIBS="-Wl,-framework,PCSC"
+        CFLAGS="-DMAC  -I/System/Library/Frameworks/Security.framework/Versions/Current/Headers -isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386"
+        LDFLAGS="-L/System/Library/Frameworks/Security.framework/Versions/Current/Security -arch ppc -arch i386"
+        CXXFLAGS="-DMAC  -I/System/Library/Frameworks/Security.framework/Versions/Current/Headers -isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386"
+        ;;
 *)
-  	AC_MSG_RESULT([UNIX/LINUX])
-	UNIX=1
+        AC_MSG_RESULT([UNIX/LINUX])
+        UNIX=1
         # should look it up on the local system
-	SCARD_LIB_NAME="libpcsclite.so.1"
-	;;
+        SCARD_LIB_NAME="libpcsclite.so.1"
+        ;;
 esac
 
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
-AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 AC_PROG_LN_S
+AM_PROG_AR
+LT_INIT
 
 # Checks for libraries.
 if test $WINDOWS -ne 1; then
@@ -117,8 +118,8 @@ PKG_CHECK_MODULES(PCSC, libpcsclite, true,
       ])
 
 # Add argument for pk11install
-AC_ARG_ENABLE(pk11install, 
-  AC_HELP_STRING([--enable-pk11install], [build an installer for legacy user apps(default=no)]))
+AC_ARG_ENABLE(pk11install,
+  AS_HELP_STRING([--enable-pk11install],[build an installer for legacy user apps(default=no)]))
 if test "$enable_pk11install" = "yes" -o "$enable_pk11install" = "true"
 then
 if test $WINDOWS -ne 1; then
@@ -158,7 +159,7 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset strdup strerror])
 
 
-AC_CONFIG_FILES([ 
+AC_CONFIG_FILES([
 Makefile
 src/libckyapplet/Makefile
 src/libckyapplet/libckyapplet.pc

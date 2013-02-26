@@ -66,8 +66,7 @@ libcoolkeypk11_la_LIBADD = @LIBCKYAPPLET@ $(ZLIB_LIBS)
 coolkeypk11.sym: coolkeypk11.def
 	grep -v ';+' $< | grep -v ';-' | sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' | grep -v '^$$'> $@
 
-clean-generic:
-	rm -f coolkeypk11.sym
+CLEANFILES = coolkeypk11.sym
 
 # remove the static and libtool libraries if necessary
 install-data-hook:
