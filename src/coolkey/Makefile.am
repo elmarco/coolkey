@@ -68,16 +68,4 @@ coolkeypk11.sym: coolkeypk11.def
 
 CLEANFILES = coolkeypk11.sym
 
-# remove the static and libtool libraries if necessary
-install-data-hook:
-	rm -f $(DESTDIR)$(pkcs11dir)/libcoolkeypk11.a
-	rm -f $(DESTDIR)$(pkcs11dir)/libcoolkeypk11.la
-if IS_WINDOWS
-	rm -f $(DESTDIR)$(pkcs11dir)/libcoolkeypk11.lib
-	mv $(DESTDIR)$(pkcs11dir)/libcoolkeypk11.dll $(DESTDIR)$(pkcs11dir)/coolkeypk11.dll
-	cp $(ZLIB_LIB)/../zlib1.dll $(DESTDIR)/$(libdir)/zlib1.dll
-endif
-
-
-
 -include $(top_srcdir)/git.mk

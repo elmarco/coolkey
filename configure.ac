@@ -97,7 +97,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_AR
-LT_INIT
+LT_INIT([disable-static win32-dll])
 
 # Checks for libraries.
 if test $WINDOWS -ne 1; then
